@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE 2ND MESSAGE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+
+  :root{
+    --black:#000000;
+    --void:#050507;
+    --deep:#0a0a0f;
+    --shadow:#0f0f18;
+    --dark:#141420;
+    --mid:#1e1e2e;
+    --muted:#2a2a3f;
+    --dim:#3d3d58;
+    --fog:#6b6b8a;
+    --ash:#9494aa;
+    --pale:#c8c8d8;
+    --ghost:#e8e8f0;
+    --white:#f5f5ff;
+    --gold:#c9a84c;
+    --gold-dim:#7a6030;
+    --crimson:#8b1a1a;
+    --blood:#5c0f0f;
+    --amber:#d4870a;
+    --silver:#a8a8c0;
+  }
+
+  html,body{
+    height:100%;
+    background:var(--void);
+    color:var(--pale);
+    font-family:'Crimson Text',Georgia,serif;
+    overflow-x:hidden;
+  }
+
+  /* GRAIN OVERLAY */
+  body::before{
+    content:'';
+    position:fixed;
+    inset:0;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+    pointer-events:none;
+    z-index:9999;
+    opacity:0.4;
+    mix-blend-mode:overlay;
+  }
+
+  /* VIGNETTE */
+  body::after{
+    content:'';
+    position:fixed;
+    inset:0;
+    background:radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.85) 100%);
+    pointer-events:none;
+    z-index:9998;
+  }
+
+  /* SCANLINES */
+  .scanlines{
+    position:fixed;
+    inset:0;
+    background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);
+    pointer-events:none;
+    z-index:9997;
+    animation:scanmove 8s linear infinite;
+  }
+
+  @keyframes scanmove{
+    0%{transform:translateY(0)}
+    100%{transform:translateY(4px)}
+  }
+
+  /* AMBIENT LIGHT */
+  .ambient{
+    position:fixed;
+    width:600px;height:600px;
+    border-radius:50%;
+    top:50%;left:50%;
+    transform:translate(-50%,-50%);
+    background:radial-gradient(circle, rgba(201,168,76,0.04) 0%, transparent 70%);
+    pointer-events:none;
+    z-index:1;
+    animation:breathe 6s ease-in-out infinite;
+  }
+
+  @keyframes breathe{
+    0%,100%{opacity:0.4;transform:translate(-50%,-50%) scale(1)}
+    50%{opacity:1;transform:translate(-50%,-50%) scale(1.3)}
+  }
+
+  /* LAYOUT */
+  .container{
+    position:relative;
+    z-index:10;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:2rem;
+  }
+
+  /* HEADER */
+  .header{
+    text-align:center;
+    margin-bottom:3rem;
+    animation:fadein 3s ease forwards;
+    opacity:0;
+  }
+
+  @keyframes fadein{
+    0%{opacity:0;transform:translateY(-20px)}
+    100%{opacity:1;transform:translateY(0)}
+  }
+
+  .eyebrow{
+    font-family:'Share Tech Mono',monospace;
+    font-size:0.65rem;
+    letter-spacing:0.4em;
+    color:var(--fog);
+    margin-bottom:1rem;
+    text-transform:uppercase;
+  }
+
+  h1{
+    font-family:'Cinzel',serif;
+    font-size:clamp(2rem,6vw,4rem);
+    font-weight:900;
+    letter-spacing:0.15em;
+    color:var(--white);
+    text-shadow:0 0 40px rgba(201,168,76,0.3), 0 0 80px rgba(201,168,76,0.1);
+    line-height:1.1;
+    margin-bottom:0.5rem;
+  }
+
+  .subtitle{
+    font-family:'Share Tech Mono',monospace;
+    font-size:0.7rem;
+    letter-spacing:0.3em;
+    color:var(--dim);
+    margin-top:0.75rem;
+  }
+
+  .ornament{
+    display:flex;
+    align-items:center;
+    gap:1rem;
+    margin:1.5rem auto;
+    width:fit-content;
+  }
+
+  .ornament-line{
+    width:60px;
+    height:1px;
+    background:linear-gradient(90deg, transparent, var(--gold-dim));
+  }
+
+  .ornament-line.right{
+    background:linear-gradient(90deg, var(--gold-dim), transparent);
+  }
+
+  .ornament-diamond{
+    width:6px;height:6px;
+    background:var(--gold-dim);
+    transform:rotate(45deg);
+  }
+
+  /* MAIN PANEL */
+  .panel{
+    position:relative;
+    width:100%;
+    max-width:520px;
+    animation:fadein 3s 0.5s ease forwards;
+    opacity:0;
+  }
+
+  .panel-border{
+    position:absolute;
+    inset:0;
+    border:1px solid rgba(201,168,76,0.12);
+    pointer-events:none;
+  }
+
+  .panel-corner{
+    position:absolute;
+    width:16px;height:16px;
+    border-color:var(--gold-dim);
+    border-style:solid;
+  }
+
+  .panel-corner.tl{top:-1px;left:-1px;border-width:1px 0 0 1px}
+  .panel-corner.tr{top:-1px;right:-1px;border-width:1px 1px 0 0}
+  .panel-corner.bl{bottom:-1px;left:-1px;border-width:0 0 1px 1px}
+  .panel-corner.br{bottom:-1px;right:-1px;border-width:0 1px 1px 0}
+
+  .panel-inner{
+    background:rgba(10,10,15,0.9);
+    padding:2.5rem 2rem;
+    backdrop-filter:blur(2px);
+  }
+
+  /* INSTRUCTION */
+  .instruction{
+    font-family:'Crimson Text',serif;
+    font-style:italic;
+    font-size:0.95rem;
+    color:var(--fog);
+    text-align:center;
+    margin-bottom:2rem;
+    line-height:1.7;
+  }
+
+  /* KEYS GRID */
+  .keys-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:1rem;
+    margin-bottom:1.5rem;
+  }
+
+  .key-field{
+    position:relative;
+  }
+
+  .key-label{
+    font-family:'Share Tech Mono',monospace;
+    font-size:0.6rem;
+    letter-spacing:0.3em;
+    color:var(--dim);
+    margin-bottom:0.4rem;
+    display:block;
+    text-transform:uppercase;
+  }
+
+  .key-input{
+    width:100%;
+    background:rgba(5,5,7,0.9);
+    border:1px solid rgba(201,168,76,0.08);
+    color:var(--pale);
+    font-family:'Share Tech Mono',monospace;
+    font-size:0.85rem;
+    letter-spacing:0.1em;
+    padding:0.7rem 0.9rem;
+    outline:none;
+    transition:border-color 0.4s, box-shadow 0.4s, background 0.4s;
+    caret-color:var(--gold);
+  }
+
+  .key-input:focus{
+    border-color:rgba(201,168,76,0.35);
+    box-shadow:0 0 20px rgba(201,168,76,0.06), inset 0 0 10px rgba(201,168,76,0.03);
+    background:rgba(10,8,5,0.95);
+  }
+
+  .key-input::placeholder{color:var(--muted);font-size:0.75rem}
+
+  .key-input.filled{border-color:rgba(201,168,76,0.2)}
+
+  /* STATUS BAR */
+  .status-bar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:1.5rem;
+    padding:0.6rem 0;
+    border-top:1px solid rgba(255,255,255,0.04);
+    border-bottom:1px solid rgba(255,255,255,0.04);
+  }
+
+  .attempts-display{
+    display:flex;
+    align-items:center;
+    gap:0.5rem;
+  }
+
+  .attempt-dot{
+    width:8px;height:8px;
+    border-radius:50%;
+    background:var(--gold-dim);
+    border:1px solid var(--gold-dim);
+    transition:all 0.5s ease;
+  }
+
+  .attempt-dot.used{
+    background:var(--blood);
+    border-color:var(--crimson);
+    box-shadow:0 0 6px rgba(139,26,26,0.5);
+  }
+
+  .attempt-dot.last-used{
+    animation:pulse-red 1s ease-out;
+  }
+
+  @keyframes pulse-red{
+    0%{transform:scale(1.5);box-shadow:0 0 15px rgba(139,26,26,0.8)}
+    100%{transform:scale(1);box-shadow:0 0 6px rgba(139,26,26,0.5)}
+  }
+
+  .status-text{
+    font-family:'Share Tech Mono',monospace;
+    font-size:0.6rem;
+    letter-spacing:0.25em;
+    color:var(--dim);
+  }
+
+  /* SUBMIT BUTTON */
+  .submit-btn{
+    width:100%;
+    position:relative;
+    background:transparent;
+    border:1px solid rgba(201,168,76,0.25);
+    color:var(--gold);
+    font-family:'Cinzel',serif;
+    font-size:0.8rem;
+    letter-spacing:0.4em;
+    padding:1rem 2rem;
+    cursor:pointer;
+    transition:all 0.4s;
+    text-transform:uppercase;
+    overflow:hidden;
+  }
+
+  .submit-btn::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:linear-gradient(90deg, transparent 0%, rgba(201,168,76,0.04) 50%, transparent 100%);
+    transform:translateX(-100%);
+    transition:transform 0.6s ease;
+  }
+
+  .submit-btn:hover:not(:disabled)::before{
+    transform:translateX(100%);
+  }
+
+  .submit-btn:hover:not(:disabled){
+    background:rgba(201,168,76,0.06);
+    border-color:rgba(201,168,76,0.5);
+    box-shadow:0 0 30px rgba(201,168,76,0.1);
+    letter-spacing:0.5em;
+  }
+
+  .submit-btn:disabled{
+    cursor:not-allowed;
+    opacity:0.3;
+    color:var(--fog);
+    border-color:var(--dim);
+  }
+
+  .submit-btn:active:not(:disabled){
+    transform:scale(0.99);
+  }
+
+  /* TENSION ANIMATION */
+  @keyframes tension-shake{
+    0%,100%{transform:translateX(0)}
+    10%{transform:translateX(-4px) rotate(-0.3deg)}
+    20%{transform:translateX(5px) rotate(0.2deg)}
+    30%{transform:translateX(-5px) rotate(-0.2deg)}
+    40%{transform:translateX(4px) rotate(0.3deg)}
+    50%{transform:translateX(-3px)}
+    60%{transform:translateX(3px)}
+    70%{transform:translateX(-2px)}
+    80%{transform:translateX(2px)}
+    90%{transform:translateX(-1px)}
+  }
+
+  @keyframes glitch-h{
+    0%,100%{clip-path:inset(0 0 90% 0);transform:translate(-4px,0)}
+    25%{clip-path:inset(20% 0 60% 0);transform:translate(4px,0)}
+    50%{clip-path:inset(50% 0 20% 0);transform:translate(-4px,0)}
+    75%{clip-path:inset(70% 0 5% 0);transform:translate(4px,0)}
+  }
+
+  @keyframes scan-reveal{
+    0%{clip-path:inset(100% 0 0 0)}
+    100%{clip-path:inset(0 0 0 0)}
+  }
+
+  @keyframes flicker-in{
+    0%{opacity:0}
+    10%{opacity:0.8}
+    12%{opacity:0}
+    20%{opacity:0.9}
+    22%{opacity:0}
+    30%{opacity:1}
+    32%{opacity:0.7}
+    40%{opacity:1}
+    60%{opacity:0.9}
+    80%{opacity:1}
+    100%{opacity:1}
+  }
+
+  @keyframes border-flicker{
+    0%,100%{border-color:rgba(201,168,76,0.25)}
+    50%{border-color:rgba(201,168,76,0.6)}
+  }
+
+  .loading-state .panel-inner{
+    animation:tension-shake 0.15s ease-in-out infinite;
+  }
+
+  /* LOADING OVERLAY */
+  .loading-overlay{
+    position:absolute;
+    inset:0;
+    background:rgba(5,5,7,0.92);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:1.5rem;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.3s;
+    z-index:20;
+  }
+
+  .loading-overlay.active{
+    opacity:1;
+    pointer-events:all;
+  }
+
+  .loading-sigil{
+    position:relative;
+    width:80px;height:80px;
+  }
+
+  .loading-ring{
+    position:absolute;
+    inset:0;
+    border-radius:50%;
+    border:1px solid transparent;
+  }
+
+  .loading-ring.outer{
+    border-top-color:var(--gold-dim);
+    border-right-color:rgba(201,168,76,0.1);
+    animation:spin 2s linear infinite;
+  }
+
+  .loading-ring.inner{
+    inset:12px;
+    border-bottom-color:var(--gold-dim);
+    border-left-color:rgba(201,168,76,0.1);
+    animation:spin 1.5s linear infinite reverse;
+  }
+
+  .loading-center{
+    position:absolute;
+    inset:30px;
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(201,168,76,0.15), transparent);
+    animation:breathe 1.5s ease-in-out infinite;
+  }
+
+  @keyframes spin{
+    100%{transform:rotate(360deg)}
+  }
+
+  .loading-text{
+    font-family:'Share Tech Mono',monospace;
+    font-size:0.65rem;
+    letter-spacing:0.4em;
+    color:var(--fog);
+    animation:flicker-text 0.1s steps(1) infinite;
+  }
+
+  @keyframes flicker-text{
+    0%,95%{opacity:1}
+    96%{opacity:0.3}
+    97%{opacity:1}
+    98%{opacity:0.6}
+    99%{opacity:1}
+  }
+
+  .loading-progress{
+    width:200px;
+    height:1px;
+    background:var(--muted);
+    position:relative;
+    overflow:hidden;
+  }
+
+  .loading-progress-bar{
+    position:absolute;
+    left:0;top:0;bottom:0;
+    width:0%;
+    background:linear-gradient(90deg, transparent, var(--gold-dim), var(--gold));
+    animation:progress-fill 2.5s ease-in-out forwards;
+  }
+
+  @keyframes progress-fill{
+    0%{width:0%}
+    60%{width:70%}
+    80%{width:85%}
+    100%{width:100%}
+  }
+
+  /* MESSAGE DISPLAY */
+  .message-display{
+    position:fixed;
+    inset:0;
+    background:var(--void);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:3rem;
+    z-index:100;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 1s ease;
+  }
+
+  .message-display.active{
+    opacity:1;
+    pointer-events:all;
+  }
+
+  .message-ambient{
+    position:absolute;
+    width:800px;height:800px;
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%);
+    pointer-events:none;
+    animation:breathe 4s ease-in-out infinite;
+  }
+
+  .message-frame{
+    position:relative;
+    max-width:660px;
+    width:100%;
+    text-align:center;
+  }
+
+  .message-eyebrow{
+    font-family:'Share Tech Mono',monospace;
+    font-size:0.6rem;
+    letter-spacing:0.5em;
+    color:var(--gold-dim);
+    margin-bottom:2rem;
+    animation:fadein 1s 0.5s ease both;
+  }
+
+  .message-text{
+    font-family:'Crimson Text',serif;
+    font-size:clamp(1.1rem,2.5vw,1.5rem);
+    line-height:1.9;
+    color:var(--ghost);
+    font-style:italic;
+    animation:scan-reveal 1.5s 0.8s cubic-bezier(0.4,0,0.2,1) both;
+    text-shadow:0 0 40px rgba(255,255,255,0.05);
+  }
+
+  .message-glitch{
+    position:absolute;
+    inset:0;
+    font-family:'Crimson Text',serif;
+    font-size:clamp(1.1rem,2.5vw,1.5rem);
+    line-height:1.9;
+    color:var(--gold-dim);
+    font-style:italic;
+    animation:glitch-h 3s 2s ease-in-out;
+    opacity:0.3;
+    pointer-events:none;
+  }
+
+  .message-ornament{
+    margin:2rem auto;
+    display:flex;
+    align-items:center;
+    gap:1rem;
+    width:fit-content;
+    animation:fadein 1s 2s ease both;
+  }
+
+  .close-btn{
+    background:transparent;
+    border:1px solid rgba(201,168,76,0.2);
+    color:var(--fog);
+    font-family:'Share Tech Mono',monospace;
+    font-size:0.6rem;
+    letter-spacing:0.4em;
+    padding:0.8rem 2rem;
+    cursor:pointer;
+    transition:all 0.4s;
+    animation:fadein 1s 2.5s ease both;
+  }
+
+  .close-btn:hover{
+    color:var(--gold);
+    border-color:rgba(201,168,76,0.5);
+    background:rgba(201,168,76,0.04);
+  }
+
+  /* BLOCKED STATE */
+  .blocked-overlay{
+    position:absolute;
+    inset:0;
+    background:rgba(5,5,7,0.97);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:1.5rem;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.8s;
+    z-index:20;
+  }
+
+  .blocked-overlay.active{
+    opacity:1;
+    pointer-events:all;
+  }
+
+  .blocked-sigil{
+    font-size:2rem;
+    color:var(--blood);
+    text-shadow:0 0 20px rgba(139,26,26,0.8);
+    animation:flicker-in 1s ease both;
+  }
+
+  .blocked-title{
+    font-family:'Cinzel',serif;
+    font-size:1rem;
+    letter-spacing:0.4em;
+    color:var(--crimson);
+    text-shadow:0 0 15px rgba(139,26,26,0.5);
+    animation:fadein 0.5s 0.5s ease both;
+    opacity:0;
+  }
+
+  .blocked-text{
+    font-family:'Share Tech Mono',monospace;
+    font-size:0.6rem;
+    letter-spacing:0.25em;
+    color:var(--dim);
+    text-align:center;
+    line-height:1.8;
+    animation:fadein 0.5s 1s ease both;
+    opacity:0;
+  }
+
+  .blocked-countdown{
+    font-family:'Share Tech Mono',monospace;
+    font-size:1.5rem;
+    color:var(--blood);
+    text-shadow:0 0 10px rgba(139,26,26,0.6);
+    letter-spacing:0.2em;
+    animation:fadein 0.5s 1.5s ease both;
+    opacity:0;
+  }
+
+  /* ERROR FLASH */
+  @keyframes error-flash{
+    0%{background:rgba(92,15,15,0.3)}
+    100%{background:transparent}
+  }
+
+  .panel.error-flash{
+    animation:error-flash 0.5s ease-out;
+  }
+
+  /* FOOTER */
+  .footer{
+    margin-top:2.5rem;
+    text-align:center;
+    animation:fadein 3s 1s ease both;
+    opacity:0;
+  }
+
+  .footer-text{
+    font-family:'Share Tech Mono',monospace;
+    font-size:0.55rem;
+    letter-spacing:0.3em;
+    color:var(--muted);
+    line-height:2;
+  }
+
+  /* BORDER ANIMATION ON PANEL */
+  @keyframes panel-pulse{
+    0%,100%{border-color:rgba(201,168,76,0.12)}
+    50%{border-color:rgba(201,168,76,0.25)}
+  }
+
+  .panel-border{
+    animation:panel-pulse 4s ease-in-out infinite;
+  }
+
+  /* TYPING CURSOR */
+  .key-input:focus::after{content:'_'}
+
+  /* MOBILE */
+  @media(max-width:480px){
+    .keys-grid{grid-template-columns:1fr}
+    h1{font-size:1.8rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="scanlines"></div>
+<div class="ambient"></div>
+
+<div class="container">
+
+  <header class="header">
+    <p class="eyebrow">TRANSMISSION · ENCRYPTED · AWAITING KEYS</p>
+    <h1>THE 2ND MESSAGE</h1>
+    <div class="ornament">
+      <div class="ornament-line"></div>
+      <div class="ornament-diamond"></div>
+      <div class="ornament-line right"></div>
+    </div>
+    <p class="subtitle">THE SECOND ONE · THE 2ND ONE · MESSAGE II</p>
+  </header>
+
+  <div class="panel" id="mainPanel">
+    <div class="panel-border"></div>
+    <div class="panel-corner tl"></div>
+    <div class="panel-corner tr"></div>
+    <div class="panel-corner bl"></div>
+    <div class="panel-corner br"></div>
+
+    <div class="panel-inner">
+
+      <p class="instruction">
+        You know what you carry.<br>
+        Enter the four keys. Unlock what was left for you.
+      </p>
+
+      <div class="keys-grid">
+        <div class="key-field">
+          <label class="key-label" for="k1">KEY · I</label>
+          <input class="key-input" id="k1" type="text" placeholder="············" maxlength="64" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="key-field">
+          <label class="key-label" for="k2">KEY · II</label>
+          <input class="key-input" id="k2" type="text" placeholder="············" maxlength="64" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="key-field">
+          <label class="key-label" for="k3">KEY · III</label>
+          <input class="key-input" id="k3" type="text" placeholder="············" maxlength="64" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="key-field">
+          <label class="key-label" for="k4">KEY · IV</label>
+          <input class="key-input" id="k4" type="text" placeholder="············" maxlength="64" autocomplete="off" spellcheck="false">
+        </div>
+      </div>
+
+      <div class="status-bar">
+        <div class="attempts-display" id="attemptsDisplay">
+          <div class="attempt-dot" id="dot0"></div>
+          <div class="attempt-dot" id="dot1"></div>
+          <div class="attempt-dot" id="dot2"></div>
+        </div>
+        <span class="status-text" id="statusText">SYSTEM READY</span>
+      </div>
+
+      <button class="submit-btn" id="submitBtn">
+        ⟡ TRANSMIT KEYS ⟡
+      </button>
+
+    </div>
+
+    <!-- LOADING OVERLAY -->
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loading-sigil">
+        <div class="loading-ring outer"></div>
+        <div class="loading-ring inner"></div>
+        <div class="loading-center"></div>
+      </div>
+      <div class="loading-text" id="loadingText">VERIFYING SEQUENCE</div>
+      <div class="loading-progress">
+        <div class="loading-progress-bar" id="progressBar"></div>
+      </div>
+    </div>
+
+    <!-- BLOCKED OVERLAY -->
+    <div class="blocked-overlay" id="blockedOverlay">
+      <div class="blocked-sigil">✕</div>
+      <div class="blocked-title">ACCESS SEALED</div>
+      <div class="blocked-text">
+        THREE ATTEMPTS CONSUMED<br>
+        THE MESSAGE WILL NOT BE DELIVERED<br>
+        THIS SESSION IS CLOSED
+      </div>
+      <div class="blocked-countdown" id="blockedCountdown">✕ ✕ ✕</div>
+    </div>
+
+  </div>
+
+  <footer class="footer">
+    <p class="footer-text">
+      SESSION ID: <span id="sessionId"></span><br>
+      THIS TRANSMISSION IS MONITORED · DO NOT SHARE THE KEYS
+    </p>
+  </footer>
+
+</div>
+
+<!-- MESSAGE DISPLAY -->
+<div class="message-display" id="messageDisplay">
+  <div class="message-ambient"></div>
+  <div class="message-frame">
+    <p class="message-eyebrow">· THE SECOND MESSAGE HAS ARRIVED ·</p>
+    <div style="position:relative">
+      <div class="message-text" id="messageText"></div>
+      <div class="message-glitch" id="messageGlitch"></div>
+    </div>
+    <div class="message-ornament">
+      <div class="ornament-line"></div>
+      <div class="ornament-diamond"></div>
+      <div class="ornament-line right"></div>
+    </div>
+    <button class="close-btn" id="closeBtn">[ CLOSE TRANSMISSION ]</button>
+  </div>
+</div>
+
+<script>
+const MAX_ATTEMPTS = 3;
+const STORAGE_KEY = 'the_2nd_message_attempts';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxLDmMC7LI1-gNF7vha2BExUHzRJ40T7QcFX6O_O-OSCf5zFmA136IrtgZEJrhtnjveww/exec';
+const AuthKey = '91a4fe6cca41db2bb6ccc6d4aab8e162bd06adcf1786c1dcc107d26190a0bb22'
+
+const $ = id => document.getElementById(id);
+
+function getAttempts(){
+  try{return parseInt(localStorage.getItem(STORAGE_KEY))||0}
+  catch{return 0}
+}
+
+function saveAttempts(n){
+  try{localStorage.setItem(STORAGE_KEY,n)}
+  catch{}
+}
+
+function genSessionId(){
+  return Array.from({length:16},()=>Math.floor(Math.random()*16).toString(16)).join('').toUpperCase().match(/.{4}/g).join('-');
+}
+
+$('sessionId').textContent = genSessionId();
+
+let attempts = getAttempts();
+let isLoading = false;
+
+const inputs = ['k1','k2','k3','k4'].map(id=>$(id));
+const loadingPhrases = [
+  'VERIFYING SEQUENCE',
+  'DECODING CIPHER',
+  'TRAVERSING VOID',
+  'UNLOCKING ARCHIVE',
+  'READING THE SIGNAL',
+];
+
+function updateUI(){
+  for(let i=0;i<3;i++){
+    const dot = $('dot'+i);
+    dot.classList.toggle('used', i < attempts);
+    if(i === attempts-1){
+      dot.classList.add('last-used');
+      setTimeout(()=>dot.classList.remove('last-used'),1000);
+    }
+  }
+
+  const remaining = MAX_ATTEMPTS - attempts;
+
+  if(attempts >= MAX_ATTEMPTS){
+    $('statusText').textContent = 'SEALED';
+    $('submitBtn').disabled = true;
+    showBlocked();
+  } else {
+    $('statusText').textContent = `${remaining} ATTEMPT${remaining!==1?'S':''} REMAINING`;
+  }
+}
+
+function showBlocked(){
+  setTimeout(()=>{
+    $('blockedOverlay').classList.add('active');
+  },300);
+}
+
+inputs.forEach(inp=>{
+  inp.addEventListener('input',()=>{
+    inp.classList.toggle('filled', inp.value.trim().length > 0);
+  });
+});
+
+async function transmit(){
+  if(isLoading || attempts >= MAX_ATTEMPTS) return;
+
+  const keys = inputs.map(i=>i.value.trim());
+  if(keys.some(k=>!k)){
+    shakePanel();
+    $('statusText').textContent = 'ALL FOUR KEYS REQUIRED';
+    return;
+  }
+
+  isLoading = true;
+  $('submitBtn').disabled = true;
+
+  showLoading();
+
+  try{
+    const randomPhrase = loadingPhrases[Math.floor(Math.random()*loadingPhrases.length)];
+    $('loadingText').textContent = randomPhrase;
+
+    // Reset and restart progress bar animation
+    const bar = $('progressBar');
+    bar.style.animation = 'none';
+    bar.offsetHeight;
+    bar.style.animation = '';
+
+    if(APPS_SCRIPT_URL.includes('PEGA_AQUI')){
+      throw new Error('apps_script_url_missing');
+    }
+
+    const params = new URLSearchParams({
+      p1: keys[0],
+      p2: keys[1],
+      p3: keys[2],
+      p4: keys[3],
+      p5: AuthKey,
+    });
+
+    const response = await fetch(`${APPS_SCRIPT_URL}?${params.toString()}`, {
+      method: 'GET',
+      cache: 'no-store',
+    });
+
+    if(!response.ok) throw new Error('transmission_failed');
+
+    const data = await response.json();
+    const messageText = data.status === 'ok' ? data.secret : null;
+
+    if(!messageText) {
+      if(data.status === 'denied') throw new Error('denied');
+      throw new Error('empty_signal');
+    }
+
+    await wait(2800);
+    hideLoading();
+    await wait(400);
+    showMessage(messageText);
+
+  } catch(err){
+    await wait(2500);
+    hideLoading();
+    await wait(200);
+
+    attempts++;
+    saveAttempts(attempts);
+    updateUI();
+
+    if(attempts >= MAX_ATTEMPTS){
+      // already shown by updateUI
+    } else {
+      flashError();
+      const errorMsg = err.message === 'denied' ? 'WRONG KEYS' : 'SIGNAL LOST';
+      $('statusText').textContent = `${errorMsg} · ${MAX_ATTEMPTS-attempts} LEFT`;
+    }
+  }
+
+  isLoading = false;
+  if(attempts < MAX_ATTEMPTS) $('submitBtn').disabled = false;
+}
+
+function wait(ms){return new Promise(r=>setTimeout(r,ms))}
+
+function showLoading(){
+  $('loadingOverlay').classList.add('active');
+  document.getElementById('mainPanel').classList.add('loading-state');
+}
+
+function hideLoading(){
+  $('loadingOverlay').classList.remove('active');
+  document.getElementById('mainPanel').classList.remove('loading-state');
+}
+
+function shakePanel(){
+  const p = $('mainPanel');
+  p.style.animation = 'tension-shake 0.4s ease-in-out';
+  setTimeout(()=>p.style.animation='',500);
+}
+
+function flashError(){
+  const p = $('mainPanel');
+  p.classList.add('error-flash');
+  setTimeout(()=>p.classList.remove('error-flash'),600);
+  shakePanel();
+
+  // Glitch the inputs briefly
+  inputs.forEach((inp,i)=>{
+    setTimeout(()=>{
+      inp.style.borderColor='rgba(139,26,26,0.6)';
+      inp.style.boxShadow='0 0 10px rgba(139,26,26,0.3)';
+      setTimeout(()=>{
+        inp.style.borderColor='';
+        inp.style.boxShadow='';
+      },600);
+    },i*80);
+  });
+}
+
+function showMessage(text){
+  $('messageText').textContent = text;
+  $('messageGlitch').textContent = text;
+  const disp = $('messageDisplay');
+  disp.classList.add('active');
+  document.body.style.overflow='hidden';
+}
+
+$('closeBtn').addEventListener('click',()=>{
+  $('messageDisplay').classList.remove('active');
+  document.body.style.overflow='';
+  // Clear inputs after reading
+  inputs.forEach(i=>{i.value='';i.classList.remove('filled')});
+});
+
+$('submitBtn').addEventListener('click', transmit);
+
+inputs.forEach(inp=>{
+  inp.addEventListener('keydown',e=>{
+    if(e.key==='Enter') transmit();
+  });
+});
+
+// Init on load
+updateUI();
+
+if(attempts >= MAX_ATTEMPTS){
+  $('submitBtn').disabled = true;
+  $('blockedOverlay').classList.add('active');
+}
+
+// Subtle ambient flicker on panel corners
+(function flickerCorners(){
+  const corners = document.querySelectorAll('.panel-corner');
+  setInterval(()=>{
+    const c = corners[Math.floor(Math.random()*corners.length)];
+    c.style.opacity='0.3';
+    setTimeout(()=>c.style.opacity='1',150);
+  },3000+Math.random()*4000);
+})();
+</script>
+</body>
+</html>
